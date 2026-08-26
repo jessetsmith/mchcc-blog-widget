@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MCHCC Blog Archive</title>
   <!--
-    Blog data (GitHub Pages):
-      https://jessetsmith.github.io/mchcc-blog-widget/blog-data.json
+    Hosted on GitHub Pages. Fetches ./blog-data.json from this same folder.
 
-    Embed on Craft with an iframe pointing at this hosted page (avoids CSP):
+    Embed on Craft:
       <iframe
-        src="https://jessetsmith.github.io/mchcc-blog-widget/blog.html"
+        src="https://jessetsmith.github.io/mchcc-blog-widget/"
         title="Blog archive"
         style="width:100%;min-height:900px;border:0;"
       ></iframe>
   -->
   <script>
-    window.MCHCC_BLOG_POSTS_URL =
-      "https://jessetsmith.github.io/mchcc-blog-widget/blog-data.json";
+    window.MCHCC_BLOG_POSTS_URL = "blog-data.json";
     window.MCHCC_BLOG_POSTS = null;
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -882,7 +880,7 @@
         const url = resolveDataUrl();
         if (!url) {
           throw new Error(
-            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL to the GitHub Pages JSON URL."
+            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL (default: blog-data.json)."
           );
         }
 
@@ -891,7 +889,7 @@
         } catch (err) {
           const msg = err && err.message ? err.message : "Failed to fetch";
           throw new Error(
-            `${msg} Could not load ${url}. If embedding on mchcc.org, iframe this page from GitHub Pages instead of pasting the HTML (parent CSP blocks cross-origin fetch).`
+            `${msg} Could not load "${url}" from this page’s folder.`
           );
         }
       }
