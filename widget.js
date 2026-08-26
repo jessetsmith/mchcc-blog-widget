@@ -1,7 +1,11 @@
-/* MCHCC blog widget — load after blog-data.js */
+/* MCHCC blog widget
+ * Loads hosted blog-data.js, then renders into #mchcc-blog-root.
+ * Safe to include from Craft Video Block HTML embeds.
+ */
 (function () {
   var DATA_SRC = "https://jessetsmith.github.io/mchcc-blog-widget/blog-data.js";
   var MOUNT_ID = "mchcc-blog-root";
+  var booting = false;
 
   function ensureMount() {
     var mount = document.getElementById(MOUNT_ID);
@@ -418,6 +422,8 @@
   }
 
   function boot() {
+    if (booting) return;
+    booting = true;
     injectStyles();
     var mount = ensureMount();
     injectMarkup(mount);

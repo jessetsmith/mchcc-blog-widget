@@ -1,12 +1,17 @@
-<!-- MCHCC Blog Archive embed
-     Paste this into a Craft Raw HTML / custom HTML block (not a Video block).
-     Do NOT wrap in <!DOCTYPE>, <html>, or <body>.
+<!--
+  Paste ALL of the lines below into the Craft Video Block “Video” field.
+  Do not add <!DOCTYPE>, <html>, or <body>.
 
-     Required once on mchcc.org CSP:
-       script-src ... https://jessetsmith.github.io
+  How it works:
+  - widget.js (GitHub Pages) builds the blog UI
+  - it then loads blog-data.js (GitHub Pages) for the posts
+  - no iframe, no Craft fetch
 
-     After changing posts: edit blog-data.json → python3 build-blog-data.py → push
+  Required CSP on mchcc.org (one-time):
+    script-src ... https://jessetsmith.github.io
+
+  Note: the Control Panel preview may show a broken/blank video placeholder
+  because this isn’t a video file. Check the live/front-end page.
 -->
 <div id="mchcc-blog-root"></div>
-<script src="https://jessetsmith.github.io/mchcc-blog-widget/blog-data.js"></script>
 <script src="https://jessetsmith.github.io/mchcc-blog-widget/widget.js"></script>
