@@ -1,0 +1,27 @@
+{#
+  Same-origin JSON feed backed by Craft Asset {asset:114519}
+  ----------------------------------------------------------
+  Public URL (cannot be fetched in-browser due to CSP connect-src 'self'):
+    https://s3.us-east-1.amazonaws.com/mchcc.com/imager/blog-data.json
+
+  This template reads that asset server-side and serves it at /blog-data.json
+  so the slim blog.html widget can fetch same-origin.
+
+  Setup:
+  1. Place at templates/blog-data.twig
+  2. In config/routes.php add:
+       'blog-data.json' => ['template' => 'blog-data'],
+  3. Confirm https://mchcc.org/blog-data.json returns the posts array
+#}
+{% set blogDataAsset = craft.assets()
+  .id(114519)
+  .one() %}
+
+{% header "Content-Type: application/json; charset=UTF-8" %}
+{% header "Cache-Control: public, max-age=300" %}
+
+{% if not blogDataAsset %}
+{"error":"Craft asset 114519 (blog-data.json) not found"}
+{% else %}
+{{ blogDataAsset.getContents()|raw }}
+{% endif %}

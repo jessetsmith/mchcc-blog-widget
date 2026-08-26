@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCHCC Blog Archive</title>
+  <!--
+    Craft Asset {asset:114519}
+    S3 (do not fetch directly — blocked by CSP):
+      https://s3.us-east-1.amazonaws.com/mchcc.com/imager/blog-data.json
+
+    Use the same-origin Craft route that proxies that asset:
+      /blog-data.json  → templates/blog-data.twig (asset id 114519)
+
+    Or iframe the full page instead of pasting HTML:
+      /blog-archive    → templates/blog-archive.twig
+  -->
+  <script>
+    window.MCHCC_BLOG_POSTS_URL = "/blog-data.json";
+    window.MCHCC_BLOG_POSTS = null;
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --mchcc-blue: #055ca6;
+      --mchcc-blue-mid: #3d92db;
+      --mchcc-blue-deep: #004e90;
+      --mchcc-blue-line: #3c76a7;
+      --mchcc-green: #00a547;
+      --mchcc-green-dark: #097537;
+      --mchcc-green-hover: #0a9445;
+      --mchcc-text: #545454;
+      --mchcc-muted: #818181;
+      --mchcc-bg: #f5f5f5;
+      --mchcc-white: #ffffff;
+      --mchcc-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.06);
+      --font: Calibre, "DM Sans", Helvetica, sans-serif;
+      --container: min(1040px, calc(100% - 40px));
+      --space: clamp(40px, 6vw, 80px);
+      --radius: 0;
+      --transition: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--mchcc-bg);
+      color: var(--mchcc-text);
+      font-family: var(--font);
+      font-size: 18px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .mchcc-blog {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .mchcc-blog[hidden] { display: none !important; }
+
+    /* —— Intro / featured —— */
+    .blog-intro {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 360px;
+      padding: var(--space) 0;
+      background: var(--mchcc-blue);
+      color: var(--mchcc-white);
+      overflow: hidden;
+    }
+
+    .blog-intro::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: min(42vw, 480px);
+      background: linear-gradient(135deg, rgba(0, 78, 144, 0.55), transparent 70%);
+      pointer-events: none;
+    }
+
+    .blog-intro__inner {
+      position: relative;
+      z-index: 1;
+      width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .blog-intro__lead {
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1.125rem;
+      font-weight: 500;
+      line-height: 1.35;
+      max-width: 28ch;
+    }
+
+    .blog-intro__title {
+      margin: 18px 0 0;
+      color: var(--mchcc-white);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .blog-intro__feat {
+      border-left: 1px solid rgba(61, 146, 219, 0.7);
+      padding-left: 36px;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .blog-intro__feat-btn {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .blog-intro__feat-btn:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 6px;
+    }
+
+    .blog-date {
+      font-size: 0.9375rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .blog-intro .blog-date { color: rgba(255, 255, 255, 0.85); }
+
+    .blog-intro__story-title {
+      margin: 10px 0 18px;
+      color: var(--mchcc-white);
+      font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: inherit;
+      font-weight: 500;
+      line-height: 20px;
+      text-decoration: none;
+    }
+
+    .blog-intro .arrow-link { color: var(--mchcc-white); }
+
+    .arrow-link__icon {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--mchcc-green);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .arrow-link__icon svg {
+      width: 10px;
+      height: 10px;
+      fill: currentColor;
+    }
+
+    .blog-intro__feat-btn:hover .arrow-link__icon,
+    .post-card:hover .arrow-link__icon,
+    .post-card:focus-visible .arrow-link__icon {
+      transform: translateX(2px);
+    }
+
+    /* —— Toolbar —— */
+    .blog-toolbar {
+      width: var(--container);
+      margin: 28px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .blog-search {
+      flex: 1 1 260px;
+      max-width: 420px;
+      display: flex;
+      align-items: stretch;
+      background: var(--mchcc-white);
+      box-shadow: var(--mchcc-shadow);
+      border-top: 3px solid var(--mchcc-green);
+    }
+
+    .blog-search input {
+      flex: 1;
+      border: 0;
+      padding: 14px 16px;
+      color: var(--mchcc-text);
+      background: transparent;
+      outline: none;
+    }
+
+    .blog-search input::placeholder { color: var(--mchcc-muted); }
+
+    .blog-count {
+      color: var(--mchcc-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* —— Post grid —— */
+    .blog-posts {
+      width: var(--container);
+      margin: 28px auto var(--space);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      min-height: 180px;
+      padding: 30px;
+      border: 0;
+      border-top: 5px solid var(--mchcc-green);
+      background: var(--mchcc-white);
+      box-shadow: var(--mchcc-shadow);
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .post-card:hover,
+    .post-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(5, 92, 166, 0.12);
+      outline: none;
+    }
+
+    .post-card .blog-date {
+      color: var(--mchcc-green);
+    }
+
+    .post-card__title {
+      margin: 0;
+      color: var(--mchcc-blue);
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .post-card__excerpt {
+      margin: 0;
+      color: var(--mchcc-text);
+      font-size: 1rem;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .post-card .arrow-link {
+      margin-top: auto;
+      padding-top: 12px;
+      color: var(--mchcc-green);
+    }
+
+    .post-card:hover .arrow-link {
+      color: var(--mchcc-blue);
+    }
+
+    .blog-empty,
+    .blog-error,
+    .blog-loading {
+      width: var(--container);
+      margin: 40px auto;
+      padding: 30px;
+      background: var(--mchcc-white);
+      box-shadow: var(--mchcc-shadow);
+      border-top: 5px solid var(--mchcc-blue-mid);
+      color: var(--mchcc-text);
+    }
+
+    .blog-error { border-top-color: #e85e5e; }
+
+    /* —— Detail view —— */
+    .blog-detail {
+      min-height: 100vh;
+      background: var(--mchcc-white);
+    }
+
+    .blog-detail__hero {
+      background: var(--mchcc-blue);
+      color: var(--mchcc-white);
+      padding: clamp(28px, 5vw, 56px) 0;
+    }
+
+    .blog-detail__inner {
+      width: var(--container);
+      margin: 0 auto;
+    }
+
+    .blog-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .blog-back:hover { color: #fff; }
+
+    .blog-back__icon {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--mchcc-green);
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--transition);
+    }
+
+    .blog-back:hover .blog-back__icon { transform: translateX(-2px); }
+
+    .blog-back__icon svg {
+      width: 10px;
+      height: 10px;
+      fill: #fff;
+      transform: rotate(180deg);
+    }
+
+    .blog-detail__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9375rem;
+    }
+
+    .blog-detail__meta .pill {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--mchcc-green);
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .blog-detail__title {
+      margin: 14px 0 0;
+      color: #fff;
+      font-size: clamp(1.85rem, 4vw, 2.75rem);
+      font-weight: 600;
+      line-height: 1.15;
+      max-width: 22ch;
+    }
+
+    .blog-detail__cover {
+      display: block;
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      margin: 28px 0 0;
+    }
+
+    .blog-detail__body {
+      width: var(--container);
+      margin: 0 auto;
+      padding: clamp(32px, 5vw, 64px) 0 var(--space);
+      max-width: 720px;
+    }
+
+    .blog-detail__body p {
+      margin: 0 0 1.1em;
+      color: var(--mchcc-text);
+      font-size: 1.125rem;
+      line-height: 1.55;
+    }
+
+    .blog-detail__body p:last-child { margin-bottom: 0; }
+
+    .blog-detail__external {
+      margin-top: 28px;
+    }
+
+    .blog-detail__external a {
+      color: var(--mchcc-blue);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .blog-detail__external a:hover {
+      color: var(--mchcc-green-hover);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 879px) {
+      .blog-intro__inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .blog-intro__feat {
+        border-left: 0;
+        border-top: 1px solid rgba(61, 146, 219, 0.7);
+        padding-left: 0;
+        padding-top: 28px;
+        min-height: 0;
+      }
+
+      .blog-posts {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 579px) {
+      .post-card { padding: 24px; }
+      .blog-intro__lead { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="blog-root">
+    <div class="mchcc-blog" id="blog-list-view" aria-live="polite">
+      <section class="blog-intro">
+        <div class="blog-intro__inner">
+          <div class="blog-intro__left">
+            <p class="blog-intro__lead" id="blog-lead">
+              Stories and updates from Maple City Health Care Center — archived from our previous blog.
+            </p>
+            <h1 class="blog-intro__title">What’s Happening at Maple City?</h1>
+          </div>
+          <div class="blog-intro__feat" id="blog-featured" hidden></div>
+        </div>
+      </section>
+
+      <div class="blog-toolbar">
+        <label class="blog-search" for="blog-search-input">
+          <span class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Search posts</span>
+          <input id="blog-search-input" type="search" placeholder="Search posts…" autocomplete="off" />
+        </label>
+        <div class="blog-count" id="blog-count"></div>
+      </div>
+
+      <div class="blog-loading" id="blog-loading">Loading posts…</div>
+      <div class="blog-error" id="blog-error" hidden>
+        <div id="blog-error-text"></div>
+      </div>
+      <div class="blog-empty" id="blog-empty" hidden>No posts match your search.</div>
+      <div class="blog-posts" id="blog-posts" hidden></div>
+    </div>
+
+    <article class="blog-detail" id="blog-detail-view" hidden>
+      <header class="blog-detail__hero">
+        <div class="blog-detail__inner">
+          <button type="button" class="blog-back" id="blog-back">
+            <span class="blog-back__icon" aria-hidden="true">
+              <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3.2 1.2 7.3 5 3.2 8.8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            Back to posts
+          </button>
+          <div class="blog-detail__meta" id="detail-meta"></div>
+          <h1 class="blog-detail__title" id="detail-title"></h1>
+          <img class="blog-detail__cover" id="detail-cover" alt="" hidden />
+        </div>
+      </header>
+      <div class="blog-detail__body">
+        <div id="detail-content"></div>
+        <p class="blog-detail__external" id="detail-external" hidden></p>
+      </div>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      const ARROW_SVG =
+        '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3.2 1.2 7.3 5 3.2 8.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      const els = {
+        root: document.getElementById("blog-root"),
+        listView: document.getElementById("blog-list-view"),
+        detailView: document.getElementById("blog-detail-view"),
+        featured: document.getElementById("blog-featured"),
+        posts: document.getElementById("blog-posts"),
+        loading: document.getElementById("blog-loading"),
+        error: document.getElementById("blog-error"),
+        errorText: document.getElementById("blog-error-text"),
+        empty: document.getElementById("blog-empty"),
+        count: document.getElementById("blog-count"),
+        search: document.getElementById("blog-search-input"),
+        back: document.getElementById("blog-back"),
+        detailMeta: document.getElementById("detail-meta"),
+        detailTitle: document.getElementById("detail-title"),
+        detailCover: document.getElementById("detail-cover"),
+        detailContent: document.getElementById("detail-content"),
+        detailExternal: document.getElementById("detail-external"),
+      };
+
+      let allPosts = [];
+      let filtered = [];
+
+      function pick(row, keys) {
+        for (const key of keys) {
+          if (!isBlank(row[key])) return row[key];
+          const found = Object.keys(row).find(
+            (k) => k.toLowerCase().replace(/[_\s]/g, "") === key.toLowerCase().replace(/[_\s]/g, "")
+          );
+          if (found != null && !isBlank(row[found])) return row[found];
+        }
+        return "";
+      }
+
+      function isBlank(value) {
+        if (value == null) return true;
+        if (typeof value === "number" && Number.isNaN(value)) return true;
+        if (typeof value === "string") {
+          const s = value.trim();
+          return !s || s === "..." || s.toLowerCase() === "nan" || s === "null" || s === "undefined";
+        }
+        return false;
+      }
+
+      function asBool(value) {
+        if (typeof value === "boolean") return value;
+        const s = String(value || "").trim().toLowerCase();
+        return s === "true" || s === "1" || s === "yes";
+      }
+
+      function isObjectId(value) {
+        return /^[a-f0-9]{24}$/i.test(String(value || "").trim());
+      }
+
+      function asArray(value) {
+        if (Array.isArray(value)) {
+          return value
+            .filter((item) => !isBlank(item) && !isObjectId(item))
+            .map(String);
+        }
+        if (isBlank(value)) return [];
+        const raw = String(value).trim();
+        if (raw.startsWith("[")) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+              return parsed
+                .map((item) =>
+                  typeof item === "object" && item
+                    ? item.label || item.name || item.title || ""
+                    : String(item)
+                )
+                .filter((item) => !isBlank(item) && !isObjectId(item));
+            }
+          } catch (_) { /* fall through */ }
+        }
+        return raw
+          .split(/[,;|]/)
+          .map((s) => s.trim())
+          .filter((s) => s && !isObjectId(s));
+      }
+
+      function resolveImageUrl(value) {
+        if (isBlank(value)) return "";
+        const raw = String(value).trim();
+        if (/^https?:\/\//i.test(raw) || raw.startsWith("/")) return raw;
+        // wix:image://v1/{fileId}/...
+        const wix = raw.match(/^wix:image:\/\/v1\/([^/#?]+)/i);
+        if (wix) return `https://static.wixstatic.com/media/${wix[1]}`;
+        return raw;
+      }
+
+      function makeExcerpt(excerpt, content) {
+        if (!isBlank(excerpt) && String(excerpt).trim() !== "...") {
+          return String(excerpt).trim();
+        }
+        const text = String(content || "").replace(/\s+/g, " ").trim();
+        if (!text) return "";
+        return text.length > 180 ? `${text.slice(0, 177).trimEnd()}…` : text;
+      }
+
+      function normalizePost(row, index) {
+        // Primary schema from blog-data.json:
+        // id, title, slug, excerpt, content, published, image, featured, category, tags
+        const title = String(pick(row, ["title"]) || "Untitled post");
+        const publishedRaw = pick(row, ["published", "publishedDate", "Published Date"]);
+        const publishedDate = publishedRaw ? new Date(publishedRaw) : null;
+        const content = String(pick(row, ["content", "plainContent", "Plain Content"]) || "");
+        const excerptRaw = pick(row, ["excerpt"]);
+        const excerpt = makeExcerpt(excerptRaw, content);
+        const coverImage = resolveImageUrl(pick(row, ["image", "coverImage", "Cover Image"]));
+        const slug = String(pick(row, ["slug"]) || "");
+        const categoryRaw = pick(row, ["category", "categories"]);
+        const categories = asArray(categoryRaw).filter((c) => !isObjectId(c));
+        const tags = asArray(pick(row, ["tags"]));
+        const featured = asBool(pick(row, ["featured"]));
+        const id = String(pick(row, ["id", "_id"]) || slug || `post-${index}`);
+
+        return {
+          id,
+          title,
+          publishedDate: publishedDate && !isNaN(publishedDate) ? publishedDate : null,
+          excerpt,
+          plain: content,
+          rich: "",
+          coverImage,
+          author: "",
+          slug,
+          postPageURL: "",
+          categories,
+          tags,
+          timeToRead: null,
+          featured,
+        };
+      }
+
+      function parseJsonData(text) {
+        // Exports sometimes include bare NaN for empty category fields.
+        const sanitized = String(text).replace(/\bNaN\b/g, "null");
+        return JSON.parse(sanitized);
+      }
+
+      function formatDate(date) {
+        if (!date) return "";
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function contentToHtml(post) {
+        if (post.rich && /<[a-z][\s\S]*>/i.test(post.rich)) {
+          return post.rich;
+        }
+        const source = post.plain || post.excerpt || "";
+        if (!source) return "<p>No content available for this post.</p>";
+        return source
+          .split(/\n{2,}/)
+          .map((block) => `<p>${escapeHtml(block).replace(/\n/g, "<br>")}</p>`)
+          .join("");
+      }
+
+      function sortPosts(posts) {
+        return posts.slice().sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          const at = a.publishedDate ? a.publishedDate.getTime() : 0;
+          const bt = b.publishedDate ? b.publishedDate.getTime() : 0;
+          return bt - at;
+        });
+      }
+
+      function renderFeatured(post) {
+        if (!post) {
+          els.featured.hidden = true;
+          els.featured.innerHTML = "";
+          return;
+        }
+        els.featured.hidden = false;
+        els.featured.innerHTML = `
+          <button type="button" class="blog-intro__feat-btn" data-post-id="${escapeHtml(post.id)}">
+            <div class="blog-date">${escapeHtml(formatDate(post.publishedDate))}</div>
+            <h2 class="blog-intro__story-title">${escapeHtml(post.title)}</h2>
+            <span class="arrow-link">
+              Read More
+              <span class="arrow-link__icon">${ARROW_SVG}</span>
+            </span>
+          </button>
+        `;
+      }
+
+      function renderCards(posts, featuredId) {
+        const cards = posts.filter((p) => p.id !== featuredId);
+        els.posts.innerHTML = cards
+          .map(
+            (post) => `
+          <button type="button" class="post-card" data-post-id="${escapeHtml(post.id)}">
+            <div class="blog-date">${escapeHtml(formatDate(post.publishedDate))}</div>
+            <h3 class="post-card__title">${escapeHtml(post.title)}</h3>
+            ${post.excerpt ? `<p class="post-card__excerpt">${escapeHtml(post.excerpt)}</p>` : ""}
+            <span class="arrow-link">
+              Read More
+              <span class="arrow-link__icon">${ARROW_SVG}</span>
+            </span>
+          </button>
+        `
+          )
+          .join("");
+        els.posts.hidden = cards.length === 0;
+        els.empty.hidden = posts.length !== 0;
+        els.count.textContent =
+          posts.length === 1 ? "1 post" : `${posts.length} posts`;
+      }
+
+      function applyFilter() {
+        const q = (els.search.value || "").trim().toLowerCase();
+        filtered = !q
+          ? allPosts
+          : allPosts.filter((p) => {
+              const hay = [
+                p.title,
+                p.excerpt,
+                p.plain,
+                p.author,
+                p.categories.join(" "),
+                p.tags.join(" "),
+              ]
+                .join(" ")
+                .toLowerCase();
+              return hay.includes(q);
+            });
+
+        const featured = filtered[0] || null;
+        renderFeatured(featured);
+        renderCards(filtered, featured ? featured.id : null);
+      }
+
+      function openPost(id) {
+        const post = allPosts.find((p) => p.id === id);
+        if (!post) return;
+
+        els.detailTitle.textContent = post.title;
+        const metaParts = [];
+        if (post.publishedDate) {
+          metaParts.push(`<span>${escapeHtml(formatDate(post.publishedDate))}</span>`);
+        }
+        if (post.author) {
+          metaParts.push(`<span>${escapeHtml(post.author)}</span>`);
+        }
+        if (post.timeToRead) {
+          metaParts.push(`<span>${post.timeToRead} min read</span>`);
+        }
+        post.categories.slice(0, 3).forEach((cat) => {
+          metaParts.push(`<span class="pill">${escapeHtml(cat)}</span>`);
+        });
+        els.detailMeta.innerHTML = metaParts.join("");
+
+        if (post.coverImage) {
+          els.detailCover.hidden = false;
+          els.detailCover.src = post.coverImage;
+          els.detailCover.alt = post.title;
+        } else {
+          els.detailCover.hidden = true;
+          els.detailCover.removeAttribute("src");
+        }
+
+        els.detailContent.innerHTML = contentToHtml(post);
+
+        if (post.postPageURL && /^https?:\/\//i.test(post.postPageURL)) {
+          els.detailExternal.hidden = false;
+          els.detailExternal.innerHTML = `Original post: <a href="${escapeHtml(post.postPageURL)}" target="_blank" rel="noopener noreferrer">${escapeHtml(post.postPageURL)}</a>`;
+        } else {
+          els.detailExternal.hidden = true;
+          els.detailExternal.innerHTML = "";
+        }
+
+        els.listView.hidden = true;
+        els.detailView.hidden = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        history.replaceState(null, "", `#${encodeURIComponent(post.slug || post.id)}`);
+      }
+
+      function showList() {
+        els.detailView.hidden = true;
+        els.listView.hidden = false;
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+
+      function wireEvents() {
+        els.search.addEventListener("input", applyFilter);
+        els.back.addEventListener("click", showList);
+
+        els.listView.addEventListener("click", (event) => {
+          const btn = event.target.closest("[data-post-id]");
+          if (!btn) return;
+          openPost(btn.getAttribute("data-post-id"));
+        });
+
+        window.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !els.detailView.hidden) showList();
+        });
+      }
+
+      function resolveDataUrl() {
+        return String(window.MCHCC_BLOG_POSTS_URL || "").trim();
+      }
+
+      function unwrapPosts(data) {
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.posts)) return data.posts;
+        if (data && Array.isArray(data.data)) return data.data;
+        throw new Error("JSON must be an array of posts (or { posts: [...] }).");
+      }
+
+      function setPosts(raw) {
+        allPosts = sortPosts(raw.map(normalizePost));
+        els.loading.hidden = true;
+        els.error.hidden = true;
+        showList();
+        applyFilter();
+      }
+
+      function showLoadError(message) {
+        els.loading.hidden = true;
+        els.posts.hidden = true;
+        els.empty.hidden = true;
+        els.error.hidden = false;
+        els.errorText.textContent = message;
+        els.count.textContent = "";
+      }
+
+      function getEmbeddedPosts() {
+        if (window.MCHCC_BLOG_POSTS == null) return null;
+        return unwrapPosts(window.MCHCC_BLOG_POSTS);
+      }
+
+      async function loadPostsFromUrl(url) {
+        const res = await fetch(url, {
+          credentials: "omit",
+          mode: "cors",
+          cache: "default",
+        });
+        if (!res.ok) {
+          throw new Error(
+            `Could not load posts (${res.status}) from "${url}".`
+          );
+        }
+        const text = await res.text();
+        return unwrapPosts(parseJsonData(text));
+      }
+
+      async function loadPosts() {
+        const embedded = getEmbeddedPosts();
+        if (embedded) return embedded;
+
+        const url = resolveDataUrl();
+        if (!url) {
+          throw new Error(
+            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL to /blog-data.json (Craft route for asset 114519)."
+          );
+        }
+
+        try {
+          return await loadPostsFromUrl(url);
+        } catch (err) {
+          const msg = err && err.message ? err.message : "Failed to fetch";
+          throw new Error(
+            `${msg} Do not use the S3 URL in the browser — CSP blocks it. Deploy blog-data.twig so /blog-data.json proxies Craft asset 114519, or iframe /blog-archive.`
+          );
+        }
+      }
+
+      async function init() {
+        wireEvents();
+
+        try {
+          const raw = await loadPosts();
+          setPosts(raw);
+
+          const hash = decodeURIComponent((window.location.hash || "").replace(/^#/, ""));
+          if (hash) {
+            const match = allPosts.find((p) => p.slug === hash || p.id === hash);
+            if (match) openPost(match.id);
+          }
+        } catch (err) {
+          showLoadError(
+            err && err.message
+              ? err.message
+              : "Unable to load blog posts."
+          );
+          console.error(err);
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
