@@ -1,6 +1,3 @@
-Source URL: https://s3.us-east-1.amazonaws.com/mchcc.com/imager/blog-data.json
-Title: blog-data.json
-
 [
   {
     "id": "686d591dd21bf4fa39324a6d",
@@ -23,7 +20,7 @@ Title: blog-data.json
     "published": "2024-06-27T16:51:27Z",
     "image": "wix:image://v1/9dacb7_5a60148e321b44a8a0bc8a2b173e0546~mv2.png/9dacb7_5a60148e321b44a8a0bc8a2b173e0546~mv2.png#originWidth=1800&originHeight=1200",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -131,7 +128,7 @@ Title: blog-data.json
     "published": "2026-07-28T17:22:10Z",
     "image": "wix:image://v1/57b283_746c3ea259184a6992e5166cbf6c26b2~mv2.png/57b283_746c3ea259184a6992e5166cbf6c26b2~mv2.png#originWidth=2626&originHeight=1824",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -143,7 +140,7 @@ Title: blog-data.json
     "published": "2026-07-01T14:09:17Z",
     "image": "wix:image://v1/927074_f35f0362a22341cc9d84d958f9c4fd56~mv2.png/927074_f35f0362a22341cc9d84d958f9c4fd56~mv2.png#originWidth=1080&originHeight=1350",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -239,7 +236,7 @@ Title: blog-data.json
     "published": "2024-11-01T17:22:48Z",
     "image": "wix:image://v1/e2a54c_d1eec9d32c054e0199bc29e3cafc78cc~mv2.png/e2a54c_d1eec9d32c054e0199bc29e3cafc78cc~mv2.png#originWidth=1024&originHeight=1024",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -251,7 +248,7 @@ Title: blog-data.json
     "published": "2025-02-18T20:41:53Z",
     "image": "wix:image://v1/e2a54c_1199e132f5e54e5bbf199719ec6a14d3~mv2.jpg/e2a54c_1199e132f5e54e5bbf199719ec6a14d3~mv2.jpg#originWidth=150&originHeight=150",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -287,7 +284,7 @@ Title: blog-data.json
     "published": "2025-10-31T16:11:38Z",
     "image": "wix:image://v1/57b283_bed0402df52c4cb6a93f1d5374b61d3d~mv2.png/57b283_bed0402df52c4cb6a93f1d5374b61d3d~mv2.png#originWidth=289&originHeight=312",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -299,7 +296,7 @@ Title: blog-data.json
     "published": "2024-06-27T16:47:55Z",
     "image": "wix:image://v1/e2a54c_998d3ecb809548e489f8ed74d0362614~mv2.png/e2a54c_998d3ecb809548e489f8ed74d0362614~mv2.png#originWidth=1024&originHeight=682",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -359,7 +356,7 @@ Title: blog-data.json
     "published": "2024-09-25T17:17:25Z",
     "image": "wix:image://v1/e2a54c_8602731ef2db45f0af2edec77ad0de7b~mv2.png/e2a54c_8602731ef2db45f0af2edec77ad0de7b~mv2.png#originWidth=2655&originHeight=3000",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -395,7 +392,7 @@ Title: blog-data.json
     "published": "2025-09-29T15:38:07Z",
     "image": "wix:image://v1/57b283_14ddf54e50c34905b5a931b31cbf28cb~mv2.webp/57b283_14ddf54e50c34905b5a931b31cbf28cb~mv2.webp#originWidth=1019&originHeight=1024",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -431,7 +428,7 @@ Title: blog-data.json
     "published": "2025-11-20T14:33:40Z",
     "image": "wix:image://v1/57b283_7f072fd1e8334f128ac930b88e0ef6f0~mv2.jpg/57b283_7f072fd1e8334f128ac930b88e0ef6f0~mv2.jpg#originWidth=6048&originHeight=4032",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -443,7 +440,7 @@ Title: blog-data.json
     "published": "2025-01-30T20:05:53Z",
     "image": "wix:image://v1/9dacb7_a25b38bee9db4aaca12c80223f8bb5d9~mv2.png/9dacb7_a25b38bee9db4aaca12c80223f8bb5d9~mv2.png#originWidth=1323&originHeight=868",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -503,7 +500,7 @@ Title: blog-data.json
     "published": "2026-01-26T13:47:55Z",
     "image": "wix:image://v1/57b283_eb09f96a5b2243e0934ded698355a0a8~mv2.jpg/57b283_eb09f96a5b2243e0934ded698355a0a8~mv2.jpg#originWidth=3124&originHeight=1836",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -515,7 +512,7 @@ Title: blog-data.json
     "published": "2026-03-17T11:21:07Z",
     "image": "wix:image://v1/57b283_30123897f4d54e09ab833820a9c21dc1~mv2.png/57b283_30123897f4d54e09ab833820a9c21dc1~mv2.png#originWidth=2625&originHeight=1824",
     "featured": true,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -527,7 +524,7 @@ Title: blog-data.json
     "published": "2026-04-15T13:05:00Z",
     "image": "wix:image://v1/57b283_cc24cd8cd1a54fe1babe3ed404ab5e88~mv2.jpg/57b283_cc24cd8cd1a54fe1babe3ed404ab5e88~mv2.jpg#originWidth=800&originHeight=538",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -539,7 +536,7 @@ Title: blog-data.json
     "published": "2024-11-20T22:00:39Z",
     "image": "wix:image://v1/e2a54c_7c67ded1241f4a5d8cdd2218502466bc~mv2.jpg/e2a54c_7c67ded1241f4a5d8cdd2218502466bc~mv2.jpg#originWidth=1024&originHeight=774",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -551,7 +548,7 @@ Title: blog-data.json
     "published": "2026-06-11T16:44:05Z",
     "image": "wix:image://v1/57b283_7f072fd1e8334f128ac930b88e0ef6f0~mv2.jpg/57b283_7f072fd1e8334f128ac930b88e0ef6f0~mv2.jpg#originWidth=6048&originHeight=4032",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -563,7 +560,7 @@ Title: blog-data.json
     "published": "2025-10-31T15:31:08Z",
     "image": "wix:image://v1/57b283_2969cc0137074148ab5e0d89e6d2e065~mv2.jpg/57b283_2969cc0137074148ab5e0d89e6d2e065~mv2.jpg#originWidth=5666&originHeight=3782",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
@@ -575,7 +572,7 @@ Title: blog-data.json
     "published": "2024-07-25T19:49:37Z",
     "image": "wix:image://v1/9dacb7_bd1e30b05fcb49449dd709d4000f1cc5~mv2.jpeg/9dacb7_bd1e30b05fcb49449dd709d4000f1cc5~mv2.jpeg#originWidth=1024&originHeight=768",
     "featured": false,
-    "category": NaN,
+    "category": null,
     "tags": "[]"
   },
   {
