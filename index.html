@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MCHCC Blog Archive</title>
   <!--
-    Hosted on GitHub Pages. Fetches ./blog-data.json from this same folder.
+    Hosted on GitHub Pages. Posts load via blog-data.js (no fetch).
 
     Embed on Craft:
       <iframe
@@ -13,11 +13,10 @@
         title="Blog archive"
         style="width:100%;min-height:900px;border:0;"
       ></iframe>
+
+    After editing blog-data.json, run: python3 build-blog-data.py
   -->
-  <script>
-    window.MCHCC_BLOG_POSTS_URL = "blog-data.json";
-    window.MCHCC_BLOG_POSTS = null;
-  </script>
+  <script src="./blog-data.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
@@ -648,12 +647,6 @@
         };
       }
 
-      function parseJsonData(text) {
-        // Exports sometimes include bare NaN for empty category fields.
-        const sanitized = String(text).replace(/\bNaN\b/g, "null");
-        return JSON.parse(sanitized);
-      }
-
       function formatDate(date) {
         if (!date) return "";
         return date.toLocaleDateString("en-US", {
@@ -825,10 +818,6 @@
         });
       }
 
-      function resolveDataUrl() {
-        return String(window.MCHCC_BLOG_POSTS_URL || "").trim();
-      }
-
       function unwrapPosts(data) {
         if (Array.isArray(data)) return data;
         if (data && Array.isArray(data.posts)) return data.posts;
@@ -858,47 +847,19 @@
         return unwrapPosts(window.MCHCC_BLOG_POSTS);
       }
 
-      async function loadPostsFromUrl(url) {
-        const res = await fetch(url, {
-          credentials: "omit",
-          mode: "cors",
-          cache: "default",
-        });
-        if (!res.ok) {
-          throw new Error(
-            `Could not load posts (${res.status}) from "${url}".`
-          );
-        }
-        const text = await res.text();
-        return unwrapPosts(parseJsonData(text));
-      }
-
-      async function loadPosts() {
+      function loadPosts() {
         const embedded = getEmbeddedPosts();
         if (embedded) return embedded;
-
-        const url = resolveDataUrl();
-        if (!url) {
-          throw new Error(
-            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL (default: blog-data.json)."
-          );
-        }
-
-        try {
-          return await loadPostsFromUrl(url);
-        } catch (err) {
-          const msg = err && err.message ? err.message : "Failed to fetch";
-          throw new Error(
-            `${msg} Could not load "${url}" from this page’s folder.`
-          );
-        }
+        throw new Error(
+          "No blog posts found. Ensure blog-data.js is loaded (defines window.MCHCC_BLOG_POSTS)."
+        );
       }
 
-      async function init() {
+      function init() {
         wireEvents();
 
         try {
-          const raw = await loadPosts();
+          const raw = loadPosts();
           setPosts(raw);
 
           const hash = decodeURIComponent((window.location.hash || "").replace(/^#/, ""));
