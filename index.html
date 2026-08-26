@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MCHCC Blog Archive</title>
   <!--
-    Craft Asset {asset:114519}
-    S3 (do not fetch directly — blocked by CSP):
-      https://s3.us-east-1.amazonaws.com/mchcc.com/imager/blog-data.json
+    Blog data (GitHub Pages):
+      https://jessetsmith.github.io/mchcc-blog-widget/blog-data.json
 
-    Use the same-origin Craft route that proxies that asset:
-      /blog-data.json  → templates/blog-data.twig (asset id 114519)
-
-    Or iframe the full page instead of pasting HTML:
-      /blog-archive    → templates/blog-archive.twig
+    Embed on Craft with an iframe pointing at this hosted page (avoids CSP):
+      <iframe
+        src="https://jessetsmith.github.io/mchcc-blog-widget/blog.html"
+        title="Blog archive"
+        style="width:100%;min-height:900px;border:0;"
+      ></iframe>
   -->
   <script>
-    window.MCHCC_BLOG_POSTS_URL = "/blog-data.json";
+    window.MCHCC_BLOG_POSTS_URL =
+      "https://jessetsmith.github.io/mchcc-blog-widget/blog-data.json";
     window.MCHCC_BLOG_POSTS = null;
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -881,7 +882,7 @@
         const url = resolveDataUrl();
         if (!url) {
           throw new Error(
-            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL to /blog-data.json (Craft route for asset 114519)."
+            "No blog posts found. Set window.MCHCC_BLOG_POSTS_URL to the GitHub Pages JSON URL."
           );
         }
 
@@ -890,7 +891,7 @@
         } catch (err) {
           const msg = err && err.message ? err.message : "Failed to fetch";
           throw new Error(
-            `${msg} Do not use the S3 URL in the browser — CSP blocks it. Deploy blog-data.twig so /blog-data.json proxies Craft asset 114519, or iframe /blog-archive.`
+            `${msg} Could not load ${url}. If embedding on mchcc.org, iframe this page from GitHub Pages instead of pasting the HTML (parent CSP blocks cross-origin fetch).`
           );
         }
       }
